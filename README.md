@@ -1,2 +1,2 @@
 # REngine
-A real engine
+A real engine made for development
