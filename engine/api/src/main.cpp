@@ -1,3 +1,4 @@
+#include "../../../include/game.h"
 #include "../include/lib.h"
 #include <string>
 

@@ -12,6 +12,8 @@ file(GLOB ENGINE_SRC "src/*.cpp" "src/*.c")
 
 add_executable(el ${ENGINE_SRC})
 
+add_library(ellib ${ENGINE_SRC})
+
 # api link
 link_directories(engine/api/build)
 target_link_libraries(el lengine)
