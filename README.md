@@ -1,4 +1,4 @@
-# REngine
+# REngine API
 A lua engine made with C++ for easy development.
 
 ## Build
