@@ -47,14 +47,28 @@ Examples of a config.lua file:
 ## Documentation
 
 ## Functions:
-    exit_game
+    exit_game(0)
         -> Takes one integer as parameter.
         -> To exit out of the game with an error_code.
         Example: exit(0)
-    key_pressed
+    key_pressed('w')
         -> Takes one character as parameter.
         -> To check if a key has been pressed (Case Sensitive).
         Example: if key_pressed('o') print("o has been pressed")
+    log("hello", 0)
+        -> Takes a string and an integer as parameter.
+        -> Logs messages first parameter is the message and the second is an integer.
+        Examples:
+            log("hello", 0) # prints out hello with info log format
+            log("no error", 1) # prints out no error with error log format
+            log("this is a warning", 2) # prints out this is a warning with warning log format
+    log_bold("hello", 0)
+        -> Takes a string and an integer as parameter.
+        -> Logs messages first parameter is the message and the second is an integer.
+        Examples:
+            log_bold("hello", 0) # prints out hello with info log format and is bold
+            log_bold("no error", 1) # prints out no error with error log format and is bold
+            log_bold("this is a warning", 2) # prints out this is a warning with warning log format and is bold
 
 ## Credits
 if you would like to embed this engine it would be easy to do so.

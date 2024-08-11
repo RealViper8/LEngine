@@ -17,6 +17,8 @@ int main(int argc, char** argv) {
 
   lua_register(L, "exit_game", lua_exit);
   lua_register(L, "key_pressed", lua_key_pressed);
+  lua_register(L, "log", lua_log);
+  lua_register(L, "log_bold", lua_log_bold);
 
   enum file_enum file_t = none;
 

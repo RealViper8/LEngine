@@ -1,4 +1,5 @@
 #include "../include/luafunctions.h"
+#include "../include/logger.h"
 #include <cctype>
 #include <cstdlib>
 #include <iostream>
@@ -147,7 +148,7 @@ int lua_key_pressed(lua_State *L) {
       setRawMode(true);
       *key = get_key_press();
       *pressed = (*key == key_to_press) ? true : false;
-      std::cout << *key << " " << *pressed << std::endl;
+      //std::cout << *key << " " << *pressed << std::endl;
       setRawMode(false);
       setNonBlocking(false);
     #endif
@@ -158,4 +159,70 @@ int lua_key_pressed(lua_State *L) {
   lua_pushboolean(L, pressed);
 
   return 1;
+}
+
+int lua_log(lua_State *L) {
+  std::string msg = lua_tostring(L, 1);
+  int state = lua_tointeger(L, 2);
+
+  msg_T type;
+
+  switch(state) {
+    case 0:
+      type = info;
+      break;
+    case 1:
+      type = error;
+      break;
+    case 2:
+      type = warning;
+      break;      
+  }
+  
+  Logger logger;
+  logger.setBuffer(msg);
+  logger.setDebug(false);
+
+  logger.print(type);
+  
+  return 2;
+}
+
+int lua_log_bold(lua_State *L) {
+
+  std::string msg = lua_tostring(L, 1);
+  int state = lua_tointeger(L, 2);
+
+  msg_T type;
+
+  switch(state) {
+    case 0:
+      type = info;
+      break;
+    case 1:
+      type = error;
+      break;
+    case 2:
+      type = warning;
+      break;      
+  }
+  
+  Logger logger;
+  logger.setBuffer(msg);
+  logger.setDebug(false);
+
+  logger.print(type, true);
+
+  return 2;
+}
+
+int lua_clear(lua_State *L) {
+
+  #ifdef OS_Windows
+    system("cls");
+  #else
+    system("clear");
+  #endif
+  
+  return 0;
 }
