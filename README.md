@@ -21,18 +21,20 @@ Steps:
 ## Use
 To use this simple engine with lua you will need to compile the project or download a release.
 After you have that just run the executable file it will create a init.lua in there you can put your own code
-in the functions update and start and close.
+in the functions update and start and close. You can use the basic functions [Refrence Lua](https://www.lua.org/manual/5.3/manual.html#6.1).
 
 ## Configurations
 You can configure this engine easily by running it with an conf as argument.
+
 Example on linux: ```el conf```
+
 Example on windows: ```el.exe conf```
 
 Some config attributes:
 --
 name : string
+
 fps : int
-terminal : bool
 
 Examples of a config.lua file:
 ```
@@ -55,7 +57,8 @@ Examples of a config.lua file:
         Example: if key_pressed('o') print("o has been pressed")
 
 ## Credits
-if you would like to embed this engine it would be easy to use.
-Made with the Lua C API -> (Lua)[https://lua.org] 
+if you would like to embed this engine it would be easy to do so.
+
+Made with the Lua C API -> [Lua](https://lua.org) 
 
 Made by RealViper.
