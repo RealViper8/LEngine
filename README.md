@@ -1,5 +1,5 @@
-# REngine
-A lua engine made with C++ for easy development.
+# LEngine
+A lua Lightweight Game Engine made with C++ for easy development.
 
 ## Build
 If you want to build it from source:
