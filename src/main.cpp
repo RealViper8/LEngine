@@ -9,6 +9,92 @@
 #include "../include/luafunctions.h"
 #include "../include/game.h"
 
+#ifndef OS_Windows
+  #include <termios.h>
+  #include <unistd.h>
+  #include <fcntl.h>
+#else
+  #include <windows.h>
+#endif
+
+#ifndef OS_Windows
+char getChar() {
+  struct termios oldt, newt;
+    char ch = '\0';
+
+    // Get current terminal attributes
+    tcgetattr(STDIN_FILENO, &oldt);
+    newt = oldt;
+
+    // Set terminal to raw mode
+    newt.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+
+    // Set terminal to non-blocking mode
+    int flags = fcntl(STDIN_FILENO, F_GETFL, 0);
+    fcntl(STDIN_FILENO, F_SETFL, flags | O_NONBLOCK);
+
+    // Attempt to read a single character
+    ssize_t bytesRead = read(STDIN_FILENO, &ch, 1);
+    if (bytesRead <= 0) {
+        ch = '\0'; // No character read
+    }
+
+    // Restore original terminal attributes
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+
+    // Restore original blocking mode
+    fcntl(STDIN_FILENO, F_SETFL, flags);
+
+    return ch;
+}
+
+#else
+
+void setConsoleMode(bool enable) {
+    HANDLE hConsole = GetStdHandle(STD_INPUT_HANDLE);
+    DWORD mode;
+    GetConsoleMode(hConsole, &mode);
+
+    if (enable) {
+        // Disable line input and echo input
+        mode &= ~(ENABLE_LINE_INPUT | ENABLE_ECHO_INPUT);
+    } else {
+        // Enable line input and echo input (restore default)
+        mode |= (ENABLE_LINE_INPUT | ENABLE_ECHO_INPUT);
+    }
+
+    SetConsoleMode(hConsole, mode);
+}
+
+// Function to get a single character with non-blocking read
+char getChar() {
+    HANDLE hConsole = GetStdHandle(STD_INPUT_HANDLE);
+    DWORD mode;
+    GetConsoleMode(hConsole, &mode);
+
+    // Set console mode to non-blocking
+    setConsoleMode(true);
+
+    // Attempt to read a single character
+    INPUT_RECORD inputRecord;
+    DWORD eventsRead;
+    char ch = '\0';
+
+    if (ReadConsoleInput(hConsole, &inputRecord, 1, &eventsRead)) {
+        if (inputRecord.EventType == KEY_EVENT && inputRecord.Event.EventType.KeyEvent.bKeyDown) {
+            ch = inputRecord.Event.EventType.KeyEvent.uChar.AsciiChar;
+        }
+    }
+
+    // Restore console mode
+    setConsoleMode(false);
+
+    return ch;
+}
+
+#endif
+
 int main(int argc, char** argv) {
   int status_code = 0;
   bool running = true;
@@ -16,7 +102,6 @@ int main(int argc, char** argv) {
   luaL_openlibs(L);
 
   lua_register(L, "exit_game", lua_exit);
-  lua_register(L, "key_pressed", lua_key_pressed);
   lua_register(L, "log", lua_log);
   lua_register(L, "log_bold", lua_log_bold);
 
@@ -82,6 +167,10 @@ int main(int argc, char** argv) {
         lua_getglobal(L, "run");
         if(lua_isboolean(L, -1)) *running = lua_toboolean(L, -1);
         lua_pop(L, 1);
+
+        std::string str(1, getChar());
+        lua_pushstring(L, str.c_str());
+        lua_setglobal(L, "pressed_key");
         
         lua_getglobal(L, "update");
         auto currentTime = std::chrono::high_resolution_clock::now();
@@ -126,3 +215,4 @@ int main(int argc, char** argv) {
   lua_close(L);
   return 0;
 }
+
