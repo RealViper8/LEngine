@@ -3,3 +3,4 @@ init.lua
 config.lua
 *.o
 *.out
+docs/build
