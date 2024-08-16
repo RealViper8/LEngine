@@ -8,6 +8,12 @@
 #include <lua.hpp>
 #include <string>
 
+#include <SDL2/SDL.h>
+#include <thread>
+
+void exit(lua_State *);
+void init_window(int, int, lua_State *);
+
 #define PREP_ERROR(n, t, m)                                                    \
   {                                                                            \
     (n).type = (t);                                                            \
@@ -18,6 +24,8 @@ typedef struct configs {
   std::string name = "Game";
   uint16_t fps = 60;
   bool terminal = true;
+  int width = 640;
+  int height = 480;
 } config_t;
 
 enum file_enum : uint {
