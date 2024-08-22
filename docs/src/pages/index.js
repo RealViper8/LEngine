@@ -44,7 +44,7 @@ export default function Home() {
   return (
     <Layout
       title={`Engine`}
-      description="Description will go into a meta tag in <head />"
+      description="A lua engine because why not? <head />"
     >
       <HomepageHeader />
       <main>

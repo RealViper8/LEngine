@@ -2,7 +2,7 @@
 sidebar_position: 1
 ---
 
-# Create a Page
+# Create a Game
 
 Add **el** executable file to your desired location make sure it is in an empty directory to create a **standalone page**:
 
